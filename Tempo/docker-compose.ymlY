@@ -1,0 +1,34 @@
+version: "3"
+services:
+  zookeeper-1:
+    image: confluentinc/cp-zookeeper:latest
+    environment:
+      ZOOKEEPER_SERVER_ID: 1
+      ZOOKEEPER_CLIENT_PORT: 22181
+      ZOOKEEPER_TICK_TIME: 2000
+      ZOOKEEPER_INIT_LIMIT: 5
+      ZOOKEEPER_SYNC_LIMIT: 2
+      ZOOKEEPER_MAXCLIENTCNXNS: 60
+      ZOOKEEPER_SERVERS: localhost:22888:23888
+    network_mode: "host"
+    deploy:
+       restart_policy:
+         condition: on-failure
+    volumes:
+     - "./var/lib/zookeeper/data"
+     - "./var/lib/zookeeper/log"
+
+
+  kafka-1:
+    image: confluentinc/cp-kafka:latest
+    depends_on:
+      - zookeeper-1
+    network_mode: "host"
+    volumes:
+     - "./var/lib/kafka/data"
+
+    environment:
+      KAFKA_BROKER_ID: 1
+      KAFKA_ZOOKEEPER_CONNECT: localhost:22181
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://localhost:19092
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1

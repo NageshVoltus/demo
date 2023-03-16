@@ -1,0 +1,132 @@
+swagger: "2.0"
+info:
+  title: TEMPO API'S.
+  version: 1.0.0
+# host: localhost:3022
+securityDefinitions:  
+  JWT:  
+    type: apiKey  
+    in: header  
+    name: access_token  
+schemes:
+  - https
+  - http
+paths:
+  /getReservationId:
+    post:
+      summary: Retrieve Reservation data
+      parameters:
+        - name: token
+          in: header
+          description: get Reservations List 
+          required: true
+        - name: body
+          in: body
+          description: get Reservations List 
+          required: true
+          schema:
+            type: object
+            properties:
+              messageId:
+                description: With respective to the message id.
+                type: integer
+              ReservationId:
+                description: Refers to the ID for the reservation you want to look up.
+                type: integer
+          #  $ref: "#/definitions/filterData"
+      responses:
+        200:
+          description: List of users
+          schema:
+            type: array
+            items:
+              type: object
+              properties:
+                userName:
+                  type: string
+                passWord:
+                  type: string
+  /postClientPMSConfirmationNumber:
+    post:
+      summary: PostClient PMS confirmation Number
+      consumes:
+        - application/json
+      parameters:
+        - name: token
+          in: header
+          description:  PostClientPMSConfirmationNumber
+          required: true
+        - name: bodyParam
+          in: body
+          schema:
+            type: object
+            properties:
+              messageId:
+                type: integer
+              TempoReservationId:
+                type: integer
+              clientPMSConfirmationNumber:
+                type: integer    
+      responses:
+        200:
+          description: Successful Updated
+          content:
+            application/json:
+              schema:
+                type: string
+  /postAvailability:
+    post:
+      summary: Retrieve Unit Availabilty Details.
+      consumes:
+        - application/json
+      parameters:
+        - name: token
+          in: header
+          description: get unitAvailability details 
+          required: true
+        - name: bodyParam
+          in: body
+          schema:
+            type: object
+            properties:
+              unitAvailability:
+                type: array
+                items:
+                  type: object
+                example: [{unitId: null, startDate: "YYYY-MM-DD", endDate: "YYYY-MM-DD", IsAvailable: false}]
+
+      responses:
+        200:
+          description: Successful response
+# definitions:
+#   HelloWorldResponse:
+#     required:
+#       - message
+#     properties:
+#       message:
+#         type: string
+#   ErrorResponse:
+#     required:
+#       - message
+#     properties:
+#       message:
+#         type: string
+#   filterData:
+#     type: object
+#   unitAvailability:
+#     type: object
+#     properties:
+#       unitAvailability:
+#         type: array
+    # required:
+    #   - Token
+    # properties:
+    #   messageId:
+    #     description: With respective to the message id.
+    #     type: integer
+    #   ReservationId:
+    #     description: Refers to the ID for the reservation you want to look up.
+    #     type: integer
+      
+     
+     

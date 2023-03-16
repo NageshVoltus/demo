@@ -1,0 +1,107 @@
+version: "3"
+services:
+  zookeeper:
+    image: confluentinc/cp-zookeeper:5.1.2
+    container_name : zookeeper
+    environment:
+      ZOOKEEPER_SERVER_ID: 1
+      ZOOKEEPER_CLIENT_PORT: 22181
+      ZOOKEEPER_TICK_TIME: 2000
+      ZOOKEEPER_INIT_LIMIT: 5
+      ZOOKEEPER_SYNC_LIMIT: 2
+      ZOOKEEPER_MAXCLIENTCNXNS: 60
+      ZOOKEEPER_SERVERS: 172.16.137.149:22888:23888
+    network_mode: "host"
+    deploy:
+       restart_policy:
+         condition: on-failure
+    volumes:
+     - "/home/vw-srv-01/dockercontent/cloud/dbs/zk/data:/var/lib/zookeeper/data"
+     - "/home/vw-srv-01/dockercontent/cloud/dbs/zk/log:/var/lib/zookeeper/log"
+
+  kafka:
+    image: confluentinc/cp-kafka:5.1.2
+    container_name : kafka
+    depends_on:
+      - "zookeeper"
+    network_mode: "host"
+    volumes:
+      - "/home/vw-srv-01/dockercontent/cloud/dbs/kafka/kafka-data:/var/lib/kafka/data"
+    environment:
+      KAFKA_BROKER_ID: 1
+      KAFKA_ZOOKEEPER_CONNECT: 172.16.137.149:22181
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://172.16.137.149:19092
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+
+  kafdrop:
+    image: obsidiandynamics/kafdrop
+    container_name : kafdrop
+    restart: "no"
+    ports:
+      - "9000:9000"
+    environment:
+      KAFKA_BROKERCONNECT: "172.16.137.149:19092"
+    depends_on:
+      - "kafka"
+
+  couchbase:
+    image: couchbase:community-6.5.0
+    container_name : couchbase
+    volumes:
+      - "/home/vw-srv-01/dockercontent/cloud/dbs/couchbase:/opt/couchbase/var"
+    network_mode: "host"
+    restart: on-failure
+
+  zero:
+    image: dgraph/dgraph:v21.12.0
+    container_name : zero
+    ports:
+      - 5080:5080
+      - 6080:6080
+    restart: on-failure
+    volumes:
+      - "/home/vw-srv-01/dockercontent/cloud/dbs/dgraph/zero:/dgraph"
+    command: dgraph zero --my=zero:5080  
+
+  alpha:
+    image: dgraph/dgraph:v21.12.0
+    container_name : alpha
+    hostname: "alpha"
+    ports:
+      - 8080:8080
+      - 9080:9080
+    restart: on-failure
+    volumes:
+      - "/home/vw-srv-01/dockercontent/cloud/dbs/dgraph/va_1:/dgraph"
+    command: dgraph alpha --my=alpha:7080  --zero=zero:5080  --security whitelist=0.0.0.0/0
+
+  ratel:
+    image: dgraph/dgraph:v20.11.0
+    container_name : ratel
+    hostname: "ratel"
+    ports:
+      - 8000:8000
+    command: dgraph-ratel
+
+  mysql:
+    image: mysql/mysql-server:5.7
+    container_name : mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: Apple#123
+    ports:
+      - 6603:3306
+    volumes:
+      - /home/vw-srv-01/dockercontent/cloud/dbs/mysql/data:/var/lib/mysql
+      - /home/vw-srv-01/dockercontent/cloud/dbs/mysql/conf:/etc/mysql/conf.d
+      
+  redis:
+    image: redis
+    container_name : redis
+    restart: always
+    environment:
+      requirepass: Apple#123
+    volumes:
+      - /home/vw-srv-01/dockercontent/cloud/dbs/redis/data:/data
+    ports:
+      - 6379:6379
+    command: redis-server --appendonly yes --requirepass Apple#123

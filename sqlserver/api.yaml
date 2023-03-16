@@ -1,0 +1,67 @@
+swagger: "2.0"
+info:
+  title: Get The Data From Unit_ref
+  version: 1.0.0
+# host: localhost:3022
+securityDefinitions:  
+  JWT:  
+    type: apiKey  
+    in: header  
+    name: access_token  
+schemes:
+  - https
+  - http
+paths:
+  /folio:
+    post:
+      summary: Retrieve a list of users
+      parameters:
+        - name: token
+          in: header
+          description: get Reservations List 
+          required: true
+        - name: body
+          in: body
+          description: get Reservations List 
+          required: true
+          schema:
+           $ref: "#/definitions/filterData"
+      responses:
+        200:
+          description: List of users
+          schema:
+            type: array
+            items:
+              type: object
+              properties:
+                userName:
+                  type: string
+                passWord:
+                  type: string
+definitions:
+  HelloWorldResponse:
+    required:
+      - message
+    properties:
+      message:
+        type: string
+  ErrorResponse:
+    required:
+      - message
+    properties:
+      message:
+        type: string
+  filterData:
+    type: object
+    # required:
+    #   - Token
+    properties:
+      ReservationId:
+        description: Refers to the ID for the reservation you want to look up.
+        type: integer
+      UserId:
+        description: With respective to the property name.
+        type: integer
+      
+     
+     

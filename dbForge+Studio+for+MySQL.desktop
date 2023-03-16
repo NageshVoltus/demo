@@ -1,0 +1,10 @@
+#!/usr/bin/env xdg-open
+
+[Desktop Entry]
+Encoding=UTF-8
+Type=Application
+X-Created-By=cxoffice-83435c41-de13-4c22-a18c-25596e84bd02
+StartupNotify=true
+Icon=cxmenu-cxoffice-83435c41-de13-4c22-a18c-25596e84bd02-CDCC_dbforgemysql.0
+Exec="/home/voltuswave4/.cxoffice/Microsoft_.NET_Framework_4.7.2/desktopdata/cxmenu/Desktop.C^5E3A_users_crossover_Desktop/dbForge+Studio+for+MySQL.lnk" %u
+Name=dbForge Studio for MySQL

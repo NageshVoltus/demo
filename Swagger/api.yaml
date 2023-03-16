@@ -1,0 +1,88 @@
+swagger: '2.0'
+info:
+  title: My API
+  version: '1.0.0'
+  description: Example API using Swagger and Node.js
+host: example.com
+basePath: /api/v1
+schemes:
+  - https
+  - http
+paths:
+  /users:
+    get:
+      summary: Get all users
+      description: Returns a list of all users
+      produces:
+        - application/json
+      responses:
+        200:
+          description: OK
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/User'
+    post:
+      summary: Create a new user
+      description: Creates a new user
+      produces:
+        - application/json
+      parameters:
+        - name: user
+          in: body
+          description: The user to create
+          required: true
+          schema:
+            $ref: '#/definitions/UserInput'
+      responses:
+        201:
+          description: Created
+          schema:
+            $ref: '#/definitions/User'
+  /users/{id}:
+    get:
+      summary: Get a user by ID
+      description: Returns a user by ID
+      produces:
+        - application/json
+      parameters:
+        - name: id
+          in: path
+          description: ID of the user to retrieve
+          required: true
+          type: string
+      responses:
+        200:
+          description: OK
+          schema:
+            $ref: '#/definitions/User'
+        404:
+          description: Not found
+definitions:
+  UserInput:
+    type: object
+    properties:
+      name:
+        type: string
+        example: John Doe
+        description: The name of the user
+      email:
+        type: string
+        example: john.doe@example.com
+        description: The email of the user
+      age:
+        type: integer
+        example: 25
+        description: The age of the user
+  User:
+    allOf:
+      - $ref: '#/definitions/UserInput'
+      - type: object
+        properties:
+          id:
+            type: string
+            example: '1'
+            description: The unique identifier of the user
+
+
+

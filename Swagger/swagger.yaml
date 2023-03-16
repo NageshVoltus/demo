@@ -1,0 +1,40 @@
+swagger: "2.0"
+info:
+  title: Example API
+  version: 1.0.0
+schemes:
+  - http
+  - https
+# securityDefinitions:  
+#   JWT:  
+#     type: apiKey  
+#     in: header  
+#     name: access_token  
+paths:
+ /user:
+    get:
+      summary: Retrieve a list of users
+      parameters:
+        - in: query
+          userName: name
+          schema:
+            type: string
+          passWord: password
+          schema: 
+            type: string
+          description: Filter users by name
+      # security:  
+      #   -JWT: []
+      responses:
+        200:
+          description: List of users
+          schema:
+            type: array
+            items:
+              type: object
+              properties:
+                userName:
+                  type: string
+                passWord:
+                  type: string
+          

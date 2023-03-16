@@ -1,0 +1,95 @@
+swagger: "2.0"
+info:
+  description: "open API for the getting the reservations"
+  version: "0.0.1"
+  title: Reservations App
+  contact:
+    email: "info@voltuswave.com"
+# during dev, should point to your local machine
+host: qa.hosttempo.com
+# basePath prefixes all resource paths 
+basePath: /
+tags:
+- name: Reservations
+  description: List of reservations
+# 
+schemes:
+  # tip: remove http to make production-grade
+  - https
+  - http
+# format of bodies a client can send (Content-Type)
+consumes:
+  - application/json
+# format of the responses to the client (Accepts)
+produces:
+  - application/json
+paths:
+  /GetReservations:
+    # binds a127 app logic to a route
+    x-swagger-router-controller: getReservations
+    post:
+      tags:
+      - Reservations
+      description: The resource reservation provides information about reservations including the reservation ID, property name, check-in date, check-out date, reserved date, and stay over dates.
+      # used as the method name of the controller
+      operationId: getReservations
+      parameters:
+        - name: body
+          in: body
+          description: get Reservations List 
+          required: true
+          schema:
+           $ref: "#/definitions/filterData"
+      responses:
+        "200":
+          description: Success
+          schema:
+            # a pointer to a definition
+            $ref: "#/definitions/HelloWorldResponse"
+        # responses may fall through to errors
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+  /swagger:
+    x-swagger-pipe: swagger_raw
+# complex objects have schema definitions
+definitions:
+  HelloWorldResponse:
+    required:
+      - message
+    properties:
+      message:
+        type: string
+  ErrorResponse:
+    required:
+      - message
+    properties:
+      message:
+        type: string
+  filterData:
+    type: object
+    required:
+      - Token
+    properties:
+      Token:
+        description: AuthenticationKey
+        type: string
+      ReservationId:
+        description: Refers to the ID for the reservation you want to look up.
+        type: string
+      PropertyNickName:
+        description: With respective to the property name.
+        type: string
+      ArrivalDate:
+        description: Check in date for a unit reserved.
+        type: string
+      DepartureDate:
+        description:  Check out date for a unit reserved.
+        type: string
+      BookedOnStartDate:
+        description: Booked on start date.
+        type: string
+      BookedOnEndDate:
+        description: Booked on end date.
+        type: string

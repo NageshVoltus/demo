@@ -1,0 +1,99 @@
+swagger: "2.0"
+info:
+  title: Tempo Reservation Details.
+  description: Tempo Reservation Details and Availability Details.
+  version: "1.0"
+schemes:
+  - https
+host: example.com
+basePath: /api
+securityDefinitions:
+  token:
+    type: apiKey
+    name: Authorization
+    in: header
+paths:
+    /getReservationId:
+    post:
+      summary: Retrieve Reservation data
+      parameters:
+        - name: token
+          in: header
+          description: get Reservations List 
+          required: true
+        - name: bodyParam1
+          in: body
+          schema:
+            type: object
+            properties:
+              messageId:
+                type: integer
+              TempoReservationId:
+                type: integer
+              clientPMSConfirmationNumber:
+                type: integer
+      responses:
+        200:
+          description: List of users
+          schema:
+            type: array
+            items:
+              type: object
+              properties:
+                userName:
+                  type: string
+                passWord:
+                  type: string
+  /post1:
+    post:
+      security:
+        - token: []
+      consumes:
+        - application/json
+      parameters:
+        - name: token
+          in: header
+          description: get postClientPMSConfirmationNumber
+          required: true
+        - name: bodyParam1
+          in: body
+          schema:
+            type: object
+            properties:
+              messageId:
+                type: integer
+              TempoReservationId:
+                type: integer
+              clientPMSConfirmationNumber:
+                type: integer
+              
+      responses:
+        200:
+          description: Successful response
+  /post2:
+    post:
+      security:
+        - token: []
+      consumes:
+        - application/json
+      parameters:
+        - name: token
+          in: header
+          description: get unitAvailability details 
+          required: true
+        - name: bodyParam1
+          in: body
+          schema:
+            type: object
+            properties:
+              UnitId:
+                type: integer
+              StartDate:
+                type: string
+              EndDate:
+                type: string
+              IsAvailable:
+                type: integer
+      responses:
+        200:
+          description: Successful response
